@@ -26,7 +26,7 @@ FactoryGirl.define do
       create(:shipment, order: order, stock_location: supplier.stock_locations.first)
       order.shipments.reload
 
-      order.update!
+      order.update_with_updater!
     end
 
     factory :completed_order_for_drop_ship_with_totals do

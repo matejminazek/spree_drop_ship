@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe Spree::Order do
-
   context '#finalize_with_drop_ship!' do
-
     after do
       SpreeDropShip::Config[:send_supplier_email] = true
     end
@@ -48,7 +46,5 @@ describe Spree::Order do
         shipment.line_items.first.variant.suppliers.first.should eql(shipment.supplier)
       end
     end
-
   end
-
 end

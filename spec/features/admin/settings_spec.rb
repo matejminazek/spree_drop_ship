@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'Admin - DropShip Settings', js: true do
-
   before do
     login_user create(:admin_user)
 
@@ -29,5 +28,4 @@ describe 'Admin - DropShip Settings', js: true do
     find_field('default_commission_percentage').value.to_f.should eql(10.0)
     expect(page).to have_content('Drop ship settings successfully updated.')
   end
-
 end

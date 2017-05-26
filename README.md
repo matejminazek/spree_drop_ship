@@ -96,6 +96,20 @@ Be sure to bundle your dependencies and then create a dummy test app for the spe
 ```shell
 bundle
 bundle exec rake test_app
+```
+After test app has been generated append 
+```js
+//= require spree/frontend/spree_auth
+```
+to */spec/dummy/vendor/assets/javascripts/spree/frontend/all.js*
+
+After that run in dumy app root
+``` shell
+bundle exec assets:precompile 
+```
+
+Extension is now ready for testing with
+``` shell
 bundle exec rspec spec
 ```
 

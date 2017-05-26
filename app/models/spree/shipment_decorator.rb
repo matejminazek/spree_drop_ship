@@ -6,6 +6,8 @@ Spree::Shipment.class_eval do
 
   scope :by_supplier, -> (supplier_id) { joins(:stock_location).where(spree_stock_locations: { supplier_id: supplier_id }) }
 
+  self.whitelisted_ransackable_attributes |= %w[state]
+
   delegate :supplier, to: :stock_location
 
   def display_final_price_with_items

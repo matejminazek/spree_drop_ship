@@ -1,0 +1,17 @@
+AllCops:
+  TargetRubyVersion: 2.2.6
+  Exclude:
+    - db/schema.rb
+    - out/**/*
+    - tmp/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - config/initializers/**/*

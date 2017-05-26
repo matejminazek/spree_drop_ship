@@ -26,6 +26,13 @@ require 'spree/testing_support/url_helpers'
 
 require 'spree_drop_ship/factories'
 
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include IntegrationHelpers

@@ -1,10 +1,8 @@
 require 'spec_helper'
 
 describe 'Admin - Shipments', js: true do
-
   context 'as Supplier' do
-
-    let!(:order) { build(:order_ready_for_drop_ship, state: 'complete', completed_at: "2011-02-01 12:36:15", number: "R100") }
+    let!(:order) { build(:order_ready_for_drop_ship, state: 'complete', completed_at: '2011-02-01 12:36:15', number: 'R100') }
     let!(:supplier) { create(:supplier) }
 
     let!(:product) {
@@ -14,7 +12,7 @@ describe 'Admin - Shipments', js: true do
     }
 
     let!(:shipment) { create(:shipment, order: order, stock_location: supplier.stock_locations.first) }
-    let!(:shipping_method) { create(:shipping_method, name: "Default") }
+    let!(:shipping_method) { create(:shipping_method, name: 'Default') }
 
     before do
       # Adjust qoh so shipment will be ready
@@ -36,38 +34,37 @@ describe 'Admin - Shipments', js: true do
     end
 
     context 'edit page' do
-
-      it "can add tracking information" do
+      it 'can add tracking information' do
         within '.table tr.show-tracking' do
           click_icon :edit
         end
         within '.table tr.edit-tracking' do
-          fill_in "tracking", with: "FOOBAR"
+          fill_in 'tracking', with: 'FOOBAR'
           click_icon :save
         end
         wait_for_ajax
         within '.table tr.show-tracking' do
-          page.should have_content("Tracking: FOOBAR")
+          page.should have_content('Tracking: FOOBAR')
         end
       end
 
-      it "can change the shipping method" do
-        within(".table tr.show-method") do
+      it 'can change the shipping method' do
+        within('.table tr.show-method') do
           click_icon :edit
         end
-        select2 "Default", from: "Shipping Method"
+        select2 'Default', from: 'Shipping Method'
         click_icon :save
         wait_for_ajax
 
-        page.should have_content("Default $0.00")
+        page.should have_content('Default $0.00')
       end
 
-      it "can ship a completed order" do
-        click_on "Ship"
+      it 'can ship a completed order' do
+        click_on 'Ship'
         wait_for_ajax
 
-        page.should have_content("shipped package")
-        order.reload.shipment_state.should == "shipped"
+        page.should have_content('shipped package')
+        order.reload.shipment_state.should == 'shipped'
       end
     end
 
@@ -76,5 +73,4 @@ describe 'Admin - Shipments', js: true do
       page.should have_content('Authorization Failure')
     end
   end
-
 end

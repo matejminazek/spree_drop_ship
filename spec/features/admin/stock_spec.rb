@@ -29,8 +29,9 @@ feature 'Admin - Product Stock Management', js: true do
 
     before(:each) do
       login_user @user
-      visit '/admin/products'
-      click_link "Stock Locations"
+      visit spree.admin_products_path
+      click_link 'Stock Locations'
+      sleep 1
     end
 
     scenario 'should only display suppliers stock locations' do
@@ -42,28 +43,31 @@ feature 'Admin - Product Stock Management', js: true do
       end
     end
 
-    scenario "can create a new stock location" do
+    scenario 'can create a new stock location' do
       visit spree.new_admin_stock_location_path
-      fill_in "Name", with: "London"
-      check "Active"
-      click_button "Create"
+      fill_in 'Name', with: 'London'
+      check 'Active'
+      click_button 'Create'
 
       page.should have_content("successfully created")
       page.should have_content("London")
     end
 
-    scenario "can delete an existing stock location", js: true do
+    scenario 'can delete an existing stock location', js: true do
       create(:stock_location, supplier: @user.supplier)
       visit current_path
 
-      find('#listing_stock_locations').should have_content("NY Warehouse")
+      page.current_url.should include('admin/stock_locations')
+
+      find('#listing_stock_locations').should have_content('NY Warehouse')
       within_row(2) { click_icon :delete }
       page.driver.browser.switch_to.alert.accept
       # Wait for API request to complete.
-      sleep(1)
+      sleep 1
+
       visit current_path
 
-      find('#listing_stock_locations').should_not have_content("NY Warehouse")
+      find('#listing_stock_locations').should_not have_content('NY Warehouse')
     end
 
     scenario "can update an existing stock location" do
@@ -76,23 +80,23 @@ feature 'Admin - Product Stock Management', js: true do
       fill_in "Name", with: "London"
       click_button "Update"
 
-      page.should have_content("successfully updated")
-      page.should have_content("London")
+      page.should have_content('successfully updated')
+      page.should have_content('London')
     end
 
-    scenario "can deactivate an existing stock location" do
+    scenario 'can deactivate an existing stock location' do
       create(:stock_location, supplier: @user.supplier)
       visit current_path
 
-      page.should have_content("Big Store")
+      page.should have_content('Big Store')
 
       within_row(1) { click_icon :edit }
-      uncheck "Active"
-      click_button "Update"
+      uncheck 'Active'
+      click_button 'Update'
 
-      find('#listing_stock_locations').should have_content("Inactive")
+      sleep 2
+
+      find('#listing_stock_locations').should have_content('Inactive')
     end
-
   end
-
 end

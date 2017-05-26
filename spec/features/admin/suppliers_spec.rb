@@ -3,8 +3,8 @@ require 'spec_helper'
 feature 'Admin - Suppliers', js: true do
 
   before do
-    country = create(:country, name: "United States")
-    create(:state, name: "Vermont", country: country)
+    country = create(:country, name: 'United States')
+    create(:state, name: 'Vermont', country: country)
     @supplier = create :supplier
   end
 

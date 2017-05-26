@@ -4,6 +4,7 @@ group :development, :test do
   gem 'rubocop', '0.48.1'
   gem 'spree', '3.2.1'
   gem 'spree_auth_devise', '~> 3.2.0.beta'
+  gem 'listen'
 end
 
 gemspec

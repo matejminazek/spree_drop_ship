@@ -3,20 +3,9 @@ require 'cancan/matchers'
 require 'spree/testing_support/ability_helpers'
 
 describe Spree::SupplierAbility do
-
   let(:user) { create(:user, supplier: create(:supplier)) }
   let(:ability) { Spree::SupplierAbility.new(user) }
   let(:token) { nil }
-
-  context 'for Dash' do
-    let(:resource) { Spree::Admin::RootController }
-
-    context 'requested by supplier' do
-      it_should_behave_like 'access denied'
-      it_should_behave_like 'no index allowed'
-      it_should_behave_like 'admin denied'
-    end
-  end
 
   context 'for Product' do
     let(:resource) { create(:product) }
@@ -25,20 +14,28 @@ describe Spree::SupplierAbility do
     it_should_behave_like 'admin granted'
 
     context 'requested by another suppliers user' do
-      let(:resource) {
+      let(:resource) do
         product = create(:product)
         product.add_supplier!(create(:supplier))
         product
-      }
-      it_should_behave_like 'access denied'
+      end
+
+      # it_should_behave_like 'access granted'
+      it { ability.should be_able_to :create, resource }
+      it { ability.should be_able_to :new, resource }
+
+      # it_should_behave_like 'access denied'
+      it { ability.should_not be_able_to :read, resource }
+      it { ability.should_not be_able_to :edit, resource }
     end
 
     context 'requested by suppliers user' do
-      let(:resource) {
+      let(:resource) do
         product = create(:product)
         product.add_supplier!(user.supplier)
         product.reload
-      }
+      end
+
       # it_should_behave_like 'access granted'
       it { ability.should be_able_to :read, resource }
       it { ability.should be_able_to :stock, resource }
@@ -47,7 +44,8 @@ describe Spree::SupplierAbility do
 
   context 'for Shipment' do
     context 'requested by another suppliers user' do
-      let(:resource) { Spree::Shipment.new({stock_location: create(:stock_location, supplier: create(:supplier))}, without_protection: true) }
+      let(:resource) { Spree::Shipment.new(stock_location: create(:stock_location, supplier: create(:supplier))) }
+
       it_should_behave_like 'access denied'
       it_should_behave_like 'no index allowed'
       it_should_behave_like 'admin denied'
@@ -57,11 +55,11 @@ describe Spree::SupplierAbility do
 
     context 'requested by suppliers user' do
       context 'when order is complete' do
-        let(:resource) {
+        let(:resource) do
           order = create(:completed_order_for_drop_ship_with_totals)
           order.stock_locations.first.update_attribute :supplier, user.supplier
-          Spree::Shipment.new({order: order, stock_location: order.stock_locations.first }, without_protection: true)
-        }
+          Spree::Shipment.new(order: order, stock_location: order.stock_locations.first)
+        end
         it_should_behave_like 'access granted'
         it_should_behave_like 'index allowed'
         it_should_behave_like 'admin granted'
@@ -70,7 +68,8 @@ describe Spree::SupplierAbility do
       end
 
       context 'when order is incomplete' do
-        let(:resource) { Spree::Shipment.new({stock_location: create(:stock_location, supplier: user.supplier)}, without_protection: true) }
+        let(:resource) { Spree::Shipment.new(stock_location: create(:stock_location, supplier: user.supplier)) }
+
         it_should_behave_like 'access denied'
         it { ability.should_not be_able_to :ready, resource }
         it { ability.should_not be_able_to :ship, resource }
@@ -85,42 +84,44 @@ describe Spree::SupplierAbility do
     it_should_behave_like 'admin granted'
 
     context 'requested by another suppliers user' do
-      let(:resource) {
+      let(:resource) do
         supplier = create(:supplier)
         variant = create(:product).master
         variant.product.add_supplier! supplier
         supplier.stock_locations.first.stock_items.first
-      }
+      end
+
       it_should_behave_like 'access denied'
     end
 
     context 'requested by suppliers user' do
-      let(:resource) {
+      let(:resource) do
         variant = create(:product).master
         variant.product.add_supplier! user.supplier
         user.supplier.stock_locations.first.stock_items.first
-      }
+      end
+
       it_should_behave_like 'access granted'
     end
   end
 
   context 'for StockLocation' do
     context 'requsted by another suppliers user' do
-      let(:resource) {
+      let(:resource) do
         supplier = create(:supplier)
         variant = create(:product).master
         variant.product.add_supplier! supplier
         supplier.stock_locations.first
-      }
+      end
       it_should_behave_like 'create only'
     end
 
     context 'requested by suppliers user' do
-      let(:resource) {
+      let(:resource) do
         variant = create(:product).master
         variant.product.add_supplier! user.supplier
         user.supplier.stock_locations.first
-      }
+      end
       it_should_behave_like 'access granted'
       it_should_behave_like 'admin granted'
       it_should_behave_like 'index allowed'
@@ -134,21 +135,23 @@ describe Spree::SupplierAbility do
     it_should_behave_like 'admin granted'
 
     context 'requested by another suppliers user' do
-      let(:resource) {
+      let(:resource) do
         supplier = create(:supplier)
         variant = create(:product).master
         variant.product.add_supplier! supplier
-        Spree::StockMovement.new({ stock_item: supplier.stock_locations.first.stock_items.first }, without_protection: true)
-      }
+        Spree::StockMovement.new(stock_item: supplier.stock_locations.first.stock_items.first)
+      end
+
       it_should_behave_like 'create only'
     end
 
     context 'requested by suppliers user' do
-      let(:resource) {
+      let(:resource) do
         variant = create(:product).master
         variant.product.add_supplier! user.supplier
-        Spree::StockMovement.new({ stock_item: user.supplier.stock_locations.first.stock_items.first }, without_protection: true)
-      }
+        Spree::StockMovement.new(stock_item: user.supplier.stock_locations.first.stock_items.first)
+      end
+
       it_should_behave_like 'access granted'
     end
   end
