@@ -1,5 +1,10 @@
-<!-- insert_bottom "[data-hook='admin_product_form_right'], #admin_product_form_right[data-hook]" -->
+<!-- insert_before "[data-hook='admin_product_form_taxons'], #admin_product_form_taxons[data-hook]" -->
 
 <% if can? :manage, Spree::Supplier %>
-  <!-- TODO allow assignment to variants -->
+  <div data-hook="admin_product_form_suppliers">
+    <%= f.field_container :supplier_ids, class: ['form-group'] do %>
+        <%= f.label :suppliers, Spree.t(:suppliers) %><br>
+        <%= f.select :supplier_ids, Spree::Supplier.all.map { |t| [t.name, t.id] }, {}, { multiple: true, class: "select2" } %>
+    <% end %>
+  </div>
 <% end %>
