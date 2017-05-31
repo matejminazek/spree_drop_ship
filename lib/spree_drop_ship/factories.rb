@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :order_for_drop_ship, parent: :order do
     bill_address
     ship_address
@@ -14,13 +13,10 @@ FactoryGirl.define do
       product.add_supplier! supplier
       # product.stock_items.where(variant_id: product.master.id).first.adjust_count_on_hand(10)
 
-      product_2 = create(:product)
-      product_2.add_supplier! create(:supplier)
+      product2 = create(:product)
+      product2.add_supplier! create(:supplier)
 
-      create_list(:line_item, evaluator.line_items_count,
-        order: order,
-        variant: product_2.master
-      )
+      create_list(:line_item, evaluator.line_items_count, order: order, variant: product2.master)
       order.line_items.reload
 
       create(:shipment, order: order, stock_location: supplier.stock_locations.first)
@@ -63,10 +59,10 @@ FactoryGirl.define do
     end
   end
 
-  factory :supplier, :class => Spree::Supplier do
+  factory :supplier, class: Spree::Supplier do
     sequence(:name) { |i| "Big Store #{i}" }
     email { FFaker::Internet.email }
-    url "http://example.com"
+    url 'http://example.com'
     address
     # Creating a stock location with a factory instead of letting the model handle it
     # so that we can run tests with backorderable defaulting to true.
@@ -89,5 +85,4 @@ FactoryGirl.define do
       variant.product.add_supplier! create(:supplier)
     end
   end
-
 end

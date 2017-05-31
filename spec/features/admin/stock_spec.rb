@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'Admin - Product Stock Management', js: true do
-
   before do
     @user = create(:supplier_user)
     @supplier1 = @user.supplier
@@ -11,7 +10,6 @@ feature 'Admin - Product Stock Management', js: true do
   end
 
   context 'as Admin' do
-
     scenario 'should display all existing stock item locations' do
       login_user create(:admin_user)
       visit spree.stock_admin_product_path(@product)
@@ -22,11 +20,9 @@ feature 'Admin - Product Stock Management', js: true do
         page.should_not have_content(@supplier2.name)
       end
     end
-
   end
 
   context 'as Supplier' do
-
     before(:each) do
       login_user @user
       visit spree.admin_products_path
@@ -49,8 +45,8 @@ feature 'Admin - Product Stock Management', js: true do
       check 'Active'
       click_button 'Create'
 
-      page.should have_content("successfully created")
-      page.should have_content("London")
+      page.should have_content('successfully created')
+      page.should have_content('London')
     end
 
     scenario 'can delete an existing stock location', js: true do
@@ -70,15 +66,15 @@ feature 'Admin - Product Stock Management', js: true do
       find('#listing_stock_locations').should_not have_content('NY Warehouse')
     end
 
-    scenario "can update an existing stock location" do
+    scenario 'can update an existing stock location' do
       create(:stock_location, supplier: @user.supplier)
       visit current_path
 
-      page.should have_content("Big Store")
+      page.should have_content('Big Store')
 
       within_row(1) { click_icon :edit }
-      fill_in "Name", with: "London"
-      click_button "Update"
+      fill_in 'Name', with: 'London'
+      click_button 'Update'
 
       page.should have_content('successfully updated')
       page.should have_content('London')

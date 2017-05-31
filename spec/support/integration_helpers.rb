@@ -1,5 +1,4 @@
 module IntegrationHelpers
-
   def login_user(user = nil, options = {})
     options[:password] ||= 'secret'
     user ||= create(:user, password: options[:password])
@@ -11,5 +10,4 @@ module IntegrationHelpers
     click_button 'Login'
     page.should_not have_content 'Login'
   end
-
 end

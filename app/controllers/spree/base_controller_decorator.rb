@@ -1,13 +1,14 @@
-Spree::BaseController.class_eval do
+module Spree
+  BaseController.class_eval do
+    prepend_before_action :redirect_supplier
 
-  prepend_before_filter :redirect_supplier
+    private
 
-  private
+    def redirect_supplier
+      return unless %w[/admin /admin/authorization_failure].include?(request.path)
+      return unless try_spree_current_user.try(:supplier)
 
-  def redirect_supplier
-    if ['/admin', '/admin/authorization_failure'].include?(request.path) && try_spree_current_user.try(:supplier)
-      redirect_to '/admin/shipments' and return false
+      redirect_to '/admin/shipments'
     end
   end
-
 end

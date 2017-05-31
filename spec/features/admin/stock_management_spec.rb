@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe "Stock Management", js: true do
-
+describe 'Stock Management', js: true do
   before do
     @user = create(:supplier_user)
     login_user @user

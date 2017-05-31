@@ -4,6 +4,7 @@ AllCops:
     - db/schema.rb
     - out/**/*
     - tmp/**/*
+    - spec/dummy/**/*
 
 Style/Documentation:
   Enabled: false
@@ -15,3 +16,7 @@ Metrics/BlockLength:
   Enabled: true
   Exclude:
     - config/initializers/**/*
+    - lib/spree_drop_ship/factories.rb
+    - lib/tasks/**/*
+    - spec/**/*
+    - spree_drop_ship.gemspec

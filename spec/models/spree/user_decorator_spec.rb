@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Spree.user_class do
-
   it { should belong_to(:supplier) }
 
   it { should have_many(:variants).through(:supplier) }
@@ -13,5 +12,4 @@ describe Spree.user_class do
     user.supplier = build :supplier
     user.supplier?.should be true
   end
-
 end

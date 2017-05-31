@@ -2,14 +2,19 @@ require 'spec_helper'
 
 describe 'Admin - Shipments', js: true do
   context 'as Supplier' do
-    let!(:order) { build(:order_ready_for_drop_ship, state: 'complete', completed_at: '2011-02-01 12:36:15', number: 'R100') }
+    let!(:order) do
+      build(:order_ready_for_drop_ship,
+            state: 'complete',
+            completed_at: '2011-02-01 12:36:15',
+            number: 'R100')
+    end
     let!(:supplier) { create(:supplier) }
 
-    let!(:product) {
+    let!(:product) do
       p = create(:product, name: 'spree t-shirt', price: 20.00)
       p.add_supplier! supplier.id
       p
-    }
+    end
 
     let!(:shipment) { create(:shipment, order: order, stock_location: supplier.stock_locations.first) }
     let!(:shipping_method) { create(:shipping_method, name: 'Default') }
@@ -23,7 +28,7 @@ describe 'Admin - Shipments', js: true do
       shipment.update!(order)
       shipment.update_amounts
 
-      # TODO this is a hack until capture_on_dispatch finished https://github.com/spree/spree/issues/4727
+      # TODO: this is a hack until capture_on_dispatch finished https://github.com/spree/spree/issues/4727
       shipment.update_attribute :state, 'ready'
 
       user = create(:user, supplier: supplier)

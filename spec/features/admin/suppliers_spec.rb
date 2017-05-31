@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'Admin - Suppliers', js: true do
-
   before do
     country = create(:country, name: 'United States')
     create(:state, name: 'Vermont', country: country)
@@ -9,7 +8,6 @@ feature 'Admin - Suppliers', js: true do
   end
 
   context 'as an Admin' do
-
     before do
       login_user create(:admin_user)
       visit spree.admin_path
@@ -66,7 +64,6 @@ feature 'Admin - Suppliers', js: true do
       click_button 'Update'
       page.should have_content('Supplier "Test Supplier" has been successfully updated!')
     end
-
   end
 
   context 'as a Supplier' do
@@ -109,18 +106,14 @@ feature 'Admin - Suppliers', js: true do
       page.should have_content('Supplier "Test Supplier" has been successfully updated!')
       page.current_path.should eql(spree.edit_admin_supplier_path(@user.reload.supplier))
     end
-
   end
 
   context 'as a User other than the suppliers' do
-
     scenario 'should be unauthorized' do
       supplier = create(:supplier)
       login_user create(:user)
       visit spree.edit_admin_supplier_path(supplier)
       page.should have_content('Authorization Failure')
     end
-
   end
-
 end

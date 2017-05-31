@@ -4,16 +4,16 @@ describe Spree::Shipment do
   describe 'Scopes' do
     it '#by_supplier' do
       supplier = create(:supplier)
-      stock_location_1 = supplier.stock_locations.first
-      stock_location_2 = create(:stock_location, supplier: supplier)
-      shipment_1 = create(:shipment)
-      shipment_2 = create(:shipment, stock_location: stock_location_1)
-      shipment_3 = create(:shipment)
-      shipment_4 = create(:shipment, stock_location: stock_location_2)
-      shipment_5 = create(:shipment)
-      shipment_6 = create(:shipment, stock_location: stock_location_1)
+      stock_location1 = supplier.stock_locations.first
+      stock_location2 = create(:stock_location, supplier: supplier)
+      create(:shipment)
+      shipment2 = create(:shipment, stock_location: stock_location1)
+      create(:shipment)
+      shipment4 = create(:shipment, stock_location: stock_location2)
+      create(:shipment)
+      shipment6 = create(:shipment, stock_location: stock_location1)
 
-      expect(subject.class.by_supplier(supplier.id)).to match_array([shipment_2, shipment_4, shipment_6])
+      expect(subject.class.by_supplier(supplier.id)).to match_array([shipment2, shipment4, shipment6])
     end
   end
 

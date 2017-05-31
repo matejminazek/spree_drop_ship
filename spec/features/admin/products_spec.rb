@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe 'Admin - Products', js: true do
-
   context 'as Admin' do
-
     xit 'should be able to change supplier' do
       s1 = create(:supplier)
       s2 = create(:supplier)
@@ -19,7 +17,5 @@ describe 'Admin - Products', js: true do
       expect(page).to have_content("Product \"#{product.name}\" has been successfully updated!")
       expect(product.reload.suppliers.first.id).to eql(s2.id)
     end
-
   end
-
 end

@@ -8,11 +8,14 @@ describe Spree::Order do
 
     it 'should deliver drop ship orders when Spree::DropShipConfig[:send_supplier_email] == true' do
       order = create(:order_with_totals, ship_address: create(:address))
-      order.line_items = [create(:line_item, variant: create(:variant_with_supplier)), create(:line_item, variant: create(:variant_with_supplier))]
+      order.line_items = [create(:line_item, variant: create(:variant_with_supplier)),
+                          create(:line_item, variant: create(:variant_with_supplier))]
       order.create_proposed_shipments
 
       order.shipments.each do |shipment|
-        Spree::DropShipOrderMailer.should_receive(:supplier_order).with(shipment.id).and_return(double(Mail, :deliver! => true))
+        Spree::DropShipOrderMailer.should_receive(:supplier_order)
+                                  .with(shipment.id)
+                                  .and_return(double(Mail, deliver!: true))
       end
 
       order.finalize!
@@ -29,7 +32,8 @@ describe Spree::Order do
     it 'should NOT deliver drop ship orders when Spree::DropShipConfig[:send_supplier_email] == false' do
       SpreeDropShip::Config[:send_supplier_email] = false
       order = create(:order_with_totals, ship_address: create(:address))
-      order.line_items = [create(:line_item, variant: create(:variant_with_supplier)), create(:line_item, variant: create(:variant_with_supplier))]
+      order.line_items = [create(:line_item, variant: create(:variant_with_supplier)),
+                          create(:line_item, variant: create(:variant_with_supplier))]
       order.create_proposed_shipments
 
       order.shipments.each do |shipment|

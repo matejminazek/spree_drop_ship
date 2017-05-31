@@ -171,5 +171,4 @@ describe Spree::SupplierAbility do
       it_should_behave_like 'update only'
     end
   end
-
 end

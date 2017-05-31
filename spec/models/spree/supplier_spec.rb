@@ -1,14 +1,12 @@
 require 'spec_helper'
 
 describe Spree::Supplier do
-
   it { should belong_to(:address) }
 
   it { should have_many(:products).through(:variants) }
   it { should have_many(:stock_locations) }
   it { should have_many(:users) }
   it { should have_many(:variants).through(:supplier_variants) }
-
   it { should validate_presence_of(:email) }
   it { should validate_presence_of(:name) }
 
@@ -20,7 +18,6 @@ describe Spree::Supplier do
   end
 
   context '#assign_user' do
-
     before do
       @instance = build(:supplier)
     end
@@ -39,7 +36,6 @@ describe Spree::Supplier do
       @instance.save
       @instance.reload.users.first.should eql(user)
     end
-
   end
 
   it '#create_stock_location' do
@@ -51,7 +47,6 @@ describe Spree::Supplier do
   end
 
   context '#send_welcome' do
-
     after do
       SpreeDropShip::Config[:send_supplier_email] = true
     end
@@ -62,28 +57,19 @@ describe Spree::Supplier do
     end
 
     context 'with Spree::DropShipConfig[:send_supplier_email] == false' do
-
       it 'should not send' do
         SpreeDropShip::Config[:send_supplier_email] = false
-        expect {
-          Spree::SupplierMailer.should_not_receive(:welcome).with(an_instance_of(Integer))
-        }
+        expect { Spree::SupplierMailer.should_not_receive(:welcome).with(an_instance_of(Integer)) }
         @instance.save
       end
-
     end
 
     context 'with Spree::DropShipConfig[:send_supplier_email] == true' do
-
       it 'should send welcome email' do
-        expect {
-          Spree::SupplierMailer.should_receive(:welcome).with(an_instance_of(Integer))
-        }
+        expect { Spree::SupplierMailer.should_receive(:welcome).with(an_instance_of(Integer)) }
         @instance.save
       end
-
     end
-
   end
 
   it '#set_commission' do
@@ -102,22 +88,19 @@ describe Spree::Supplier do
   end
 
   describe '#shipments' do
-
     let!(:supplier) { create(:supplier) }
 
     it 'should return shipments for suppliers stock locations' do
-      stock_location_1 = supplier.stock_locations.first
-      stock_location_2 = create(:stock_location, supplier: supplier)
-      shipment_1 = create(:shipment)
-      shipment_2 = create(:shipment, stock_location: stock_location_1)
-      shipment_3 = create(:shipment)
-      shipment_4 = create(:shipment, stock_location: stock_location_2)
-      shipment_5 = create(:shipment)
-      shipment_6 = create(:shipment, stock_location: stock_location_1)
+      stock_location1 = supplier.stock_locations.first
+      stock_location2 = create(:stock_location, supplier: supplier)
+      create(:shipment)
+      shipment2 = create(:shipment, stock_location: stock_location1)
+      create(:shipment)
+      shipment4 = create(:shipment, stock_location: stock_location2)
+      create(:shipment)
+      shipment6 = create(:shipment, stock_location: stock_location1)
 
-      expect(supplier.shipments).to match_array([shipment_2, shipment_4, shipment_6])
+      expect(supplier.shipments).to match_array([shipment2, shipment4, shipment6])
     end
-
   end
-
 end
