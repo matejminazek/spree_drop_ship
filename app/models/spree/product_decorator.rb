@@ -25,7 +25,7 @@ module Spree
 
     # overrides for has_many :suppliers helper methods for escaping ActiveRecord::HasManyThroughNestedAssociations error
     def supplier_ids
-      suppliers.pluck(:id)
+      suppliers.unscope(where: :deleted_at).pluck(:id)
     end
 
     def supplier_ids=(new_supplier_ids)
